@@ -1,0 +1,38 @@
+<!--
+	2017-01-19	http://stackoverflow.com/questions/6016120/relative-url-to-a-different-port-number-in-a-hyperlink/13522508#13522508
+	2017-01-19	http://jsfiddle.net/JtF39/79/
+	2017-01-19	Windows R. shell:common startup
+-->
+<!--
+<a href=":8080/test/blah">Test absolute</a>
+<a href=":7051./test/blah">Test relative</a>
+-->
+
+<a href=":8081">TutorialsPoint.com_-_GlobalObjects.js</a><br>
+<a href=":8083">Figlet.js</a><br>
+<a href=":8084">Node.js in Action_-_Bare-bones ReadStream static file server.js</a><br>
+<a href=":8085">Node.js in Action_-_Listing 4.5 HTTP server supporting GET and POST.js</a><br>
+<a href=":8086">EnvironmentVariables.js</a><br>
+<a href=":8087">github.com-substack_-_resume.js</a><br>
+<a href=":8088">airpair.com_-_screenscraping.js</a><br>
+<a href=":8089">airpair.com_-_DomainNameSystemDNS.js</a><br>
+<a href=":8090">github.com/WhichBrowser/Parser-JavaScript</a><br>
+<a href=":8091">w3schools.com_-_url</a><br>
+<a href=":8092/?address=Nodejs.org">Nodejs.org_-_dns</a><br>
+
+<script>
+    // delegate event for performance, and save attaching a million events to each anchor
+    document.addEventListener('click', function(event) {
+      var target = event.target;
+      if (target.tagName.toLowerCase() == 'a')
+      {
+          var port = target.getAttribute('href').match(/^:(\d+)(.*)/);
+          if (port)
+          {
+             target.href = port[2];
+             target.port = port[1];
+          }
+      }
+    }, false);
+</script>
+

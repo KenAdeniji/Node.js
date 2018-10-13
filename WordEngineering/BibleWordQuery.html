@@ -1,0 +1,87 @@
+<form method="post" action="/">
+<fieldset>
+<legend>Query</legend>
+<div align="center">
+	<input type="text" ID="bibleWord" name="bibleWord" size="50"/>
+
+	<select id="logic" name="logic">
+	  <option value="and">And</option>		
+	  <option value="or">Or</option>
+	  <option value="phrase">Phrase</option>
+	</select>
+
+	<label for="wholeWords">Whole Words
+		<input type=checkbox id="wholeWords" name="wholeWords" checked/>
+	</label>	
+
+	<select id="limit" name="limit" multiple size="2">
+		<option value="all" selected="selected">All</option>		
+		<option value="old">Old Testament</option>
+		<option value="new">New Testament</option>
+		<option value="pentateuch">Pentateuch</option>
+		<option value="major prophets">Major Prophets</option>
+		<option value="minor prophets">Minor Prophets</option>
+		<option value="gospel">Gospel</option>
+	</select>
+
+	<label id="limitChosen" style="display: none;"></label>
+
+	<select id="bibleVersion" name="bibleVersion"> 
+		<option value="ASV">American Standard Bible</option>
+		<option value="KJV" selected>King James Version</option>
+		<option value="YLT">Young's Literal Translation</option>
+	</select>
+	
+	<!--
+	<button id="query">Query</button>
+	-->
+	
+	<input type="submit" value="Query" />
+	<br />
+	<label for="collate">Scripture reference concatenate visible:</label>		
+	<input type="checkbox" id="collate" onclick="combine();"/>
+</div>
+</fieldset>	
+</form>
+
+<div align="center">	
+	<label for="versesCount">Verse(s) count:</label>
+	<label id="versesCount"></label>
+	<br />
+	<div id="resultSet"> </div>
+</div>	
+<div id="scriptureReferenceCollate" align="center"> </div>
+
+<script src="./BibleVersion.js"> </script>
+
+<script>
+	function populate()
+	{
+		var bibleVersion = document.getElementById("bibleVersion");
+		bibleVersion.options.length = 0;
+
+		var bibleVersions = [
+			["King James Version", "KJV"],
+			["American Standard Bible", "ASV"],
+			["Young's Literal Translation", "YLT"] 
+		];
+		
+		for (var rowIndex = 0, rowCount = bibleVersions.length; rowIndex < rowCount; ++rowIndex)
+		{
+			var option = document.createElement("option");
+			option.text = bibleVersions[rowIndex][0];
+			option.value = bibleVersions[rowIndex][1];;
+			bibleVersion.appendChild(option);
+			console.log(option);
+		}
+	}
+	
+/*
+	function submitRequest()
+	{
+		window.location.replace(window.location);
+	}
+*/	
+	window.addEventListener("load", populate, false);
+	//document.gerElementById("query").addEventListener("click", submitRequest, false);
+</script>

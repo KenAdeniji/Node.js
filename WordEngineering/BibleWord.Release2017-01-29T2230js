@@ -1,0 +1,103 @@
+/*
+	2017-01-20	BibleWord.js	Created.
+	2017-01-20	npm install mongodb --save
+	2017-01-28	http://stackoverflow.com/questions/25507866/how-can-i-use-a-cursor-foreach-in-mongodb-using-node-js
+	2017-01-29	http://stackoverflow.com/questions/10610131/checking-if-a-field-contains-a-string
+				db.users.find( { 'name' : { '$regex' : yourvalue, '$options' : 'i' } } )
+	2017-01-29	http://stackoverflow.com/questions/17039018/how-to-use-a-variable-as-a-field-name-in-mongodb-native-findone			
+*/	
+var http = require("http");
+const url = require('url');
+var qs = require('querystring');
+
+var mongodb = require('mongodb');
+
+var WordEngineering = require("./WordEngineering.js");
+
+var bibleVersion = "";
+var bibleWord = "";
+
+http.createServer(function (request, response) {
+
+	// Send the HTTP header 
+	// HTTP Status: 200 : OK
+	// Content Type: text/plain
+	response.writeHead(200, {'Content-Type': 'text/html'});
+  
+	determineRequest(request, response);
+}).listen(8082);
+
+// Console will print the message
+console.log('Server running at http://127.0.0.1:8082/');
+
+function determineRequest(request, response)
+{
+    //console.log(request.method);
+	if(request.method=='POST') {
+		var body = '';
+		request.setEncoding('utf8');
+		request.on('data', function(chunk){ body += chunk });
+		request.on('end', function(){
+			var obj = qs.parse(body); 
+			bibleVersion = obj.bibleVersion;
+			bibleWord = obj.bibleWord;
+		});
+    }
+    else if(request.method=='GET') {
+
+	}
+    WordEngineering.CascadingStyleSheetCSS.insertFile(request, response, "WordEngineering.css");
+	WordEngineering.HTML.insertFile(request, response, "BibleWordQuery.html");
+	buildBibleWordHTMLTable(request, response);
+}
+
+function buildBibleWordHTMLTable(request, response)
+{
+	//We need to work with "MongoClient" interface in order to connect to a mongodb server.
+	var MongoClient = mongodb.MongoClient;
+
+	// Connection URL. This is where your mongodb server is running.
+	var url = 'mongodb://localhost:27017/Bible';
+
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+		if (err) {
+			console.log('Unable to connect to the mongoDB server. Error:', err);
+		} else {
+
+			//HURRAY!! We are connected. :)
+			console.log('Connection established to', url);
+
+			var columnName = WordEngineering.BibleVersion.columnName(bibleVersion);
+			
+			//console.log(bibleVersion, columnName, bibleWord);
+
+			if (!columnName)
+			{
+				columnName = 'verseText';
+			}	
+			
+			var query = {};
+			query[columnName] = { '$regex' : bibleWord, '$options' : 'i' };
+			
+			response.write("<table>");
+			
+			db.collection('KJV').find(query).toArray(function(err, docs) {
+
+				docs.forEach(function(doc) {
+					var resultRow = WordEngineering.HTMLTable.buildRow
+					(
+						doc.scriptureReference,
+						doc.verseText
+					)
+					response.write(resultRow);
+				});
+
+				db.close();
+				response.write("</table>");
+				response.end();
+
+			});
+		}
+	});
+}

@@ -9,6 +9,7 @@
 	2017-01-31	http://stackoverflow.com/questions/10855323/dynamic-mongodb-query-generation-with-node-js-driver
 	2017-01-31	https://docs.mongodb.com/manual/reference/operator/query/where/
 	2018-04-23	db.collection('Scripture').find( { bookTitle: { $eq: 'Daniel' } }).toArray(function(err, docs) {
+	2023-12-21	Server-side database: mongodb. Client-side front-end language: JavaScript. Implementation JavaScript.
 */	
 var http = require("http");
 const url = require('url');
